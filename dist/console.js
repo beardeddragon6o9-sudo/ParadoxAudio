@@ -1,11 +1,11 @@
-const consoleDialog = document.querySelector(".console");
-const tabs = [...consoleDialog.querySelectorAll('[role="tab"]')];
-const messages = consoleDialog.querySelector(".messages");
-const composer = consoleDialog.querySelector(".composer");
-const questionInput = composer.elements.question;
+const cockpit = document.querySelector(".cockpit");
 const touchscreen = document.querySelector(".touchscreen");
-const screenReply = touchscreen.querySelector(".screen-reply");
-const screenReplyText = screenReply.querySelector(".screen-reply-text");
+const zoomButton = touchscreen.querySelector(".screen-zoom");
+const tabs = [...touchscreen.querySelectorAll('[role="tab"]')];
+const chatHistory = touchscreen.querySelector(".chat-history");
+const messages = touchscreen.querySelector(".messages");
+const composer = touchscreen.querySelector(".composer");
+const questionInput = composer.elements.question;
 
 const sampleReplies = new Map([
   [
@@ -26,6 +26,7 @@ function showView(view) {
   const activeTab = tabs.find((tab) => tab.getAttribute("aria-controls") === view);
   if (!activeTab) return false;
 
+  const changed = activeTab.getAttribute("aria-selected") !== "true";
   for (const tab of tabs) {
     const selected = tab === activeTab;
     tab.setAttribute("aria-selected", String(selected));
@@ -33,9 +34,17 @@ function showView(view) {
     document.getElementById(tab.getAttribute("aria-controls")).hidden = !selected;
   }
 
-  if (!consoleDialog.open) consoleDialog.showModal();
-  activeTab.focus();
+  activeTab.focus({ preventScroll: true });
+  touchscreen.scrollIntoView({ block: "nearest" });
+  if (changed && view === "questions") scrollToLatestMessage();
   return true;
+}
+
+function scrollToLatestMessage() {
+  const latest = messages.lastElementChild;
+  if (latest && !chatHistory.closest("[hidden]")) {
+    chatHistory.scrollTop = latest.offsetTop - 4;
+  }
 }
 
 function appendMessage(role, content) {
@@ -43,17 +52,13 @@ function appendMessage(role, content) {
   message.classList.add("message", role);
   message.textContent = content;
   messages.append(message);
-  messages.scrollTop = messages.scrollHeight;
+  scrollToLatestMessage();
 }
 
 function showReply(reply) {
   if (typeof reply !== "string" || !reply.trim()) return false;
 
-  const content = reply.trim();
-  appendMessage("assistant", content);
-  screenReplyText.textContent = content;
-  screenReply.hidden = false;
-  touchscreen.setAttribute("aria-describedby", screenReply.id);
+  appendMessage("assistant", reply.trim());
   return true;
 }
 
@@ -69,7 +74,7 @@ function submitQuestion(value) {
   if (useSampleReply) {
     const key = question.toLowerCase().replace(/[?.!]+$/, "");
     showReply(sampleReplies.get(key) ??
-      "This preview has sample answers for the three questions above. Try one to see how a reply appears on the console.");
+      "I can answer the sample questions in this demo. Scroll up to try one.");
   }
 }
 
@@ -92,7 +97,7 @@ tabs.forEach((tab, index) => {
   });
 });
 
-consoleDialog.querySelectorAll("[data-question]").forEach((button) => {
+touchscreen.querySelectorAll("[data-question]").forEach((button) => {
   button.addEventListener("click", () => submitQuestion(button.dataset.question));
 });
 
@@ -104,16 +109,22 @@ composer.addEventListener("submit", (event) => {
   }
   submitQuestion(questionInput.value);
   composer.reset();
-  questionInput.focus();
+  questionInput.focus({ preventScroll: true });
 });
 
-consoleDialog.addEventListener("click", (event) => {
-  if (event.target !== consoleDialog) return;
-  const bounds = consoleDialog.getBoundingClientRect();
-  if (event.clientX < bounds.left || event.clientX > bounds.right ||
-      event.clientY < bounds.top || event.clientY > bounds.bottom) {
-    consoleDialog.close();
-  }
+function setZoom(zoomed) {
+  cockpit.toggleAttribute("data-zoomed", zoomed);
+  const label = zoomed ? "Return to full cockpit" : "Zoom touchscreen";
+  zoomButton.setAttribute("aria-pressed", String(zoomed));
+  zoomButton.setAttribute("aria-label", label);
+  zoomButton.title = label;
+}
+
+zoomButton.addEventListener("click", () => setZoom(!cockpit.hasAttribute("data-zoomed")));
+touchscreen.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape" || !cockpit.hasAttribute("data-zoomed") || !zoomButton.offsetWidth) return;
+  setZoom(false);
+  zoomButton.focus({ preventScroll: true });
 });
 
 window.paradoxConsole = Object.freeze({
