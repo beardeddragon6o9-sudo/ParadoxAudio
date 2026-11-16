@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100e0d">
+  <meta name="description" content="Explore custom car audio DSP tuning from the Paradox Audio cockpit.">
+  <title>Paradox Audio | Custom DSP Tuning</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="console.js" defer></script>
+</head>
+<body>
+  <main class="cockpit" aria-labelledby="headline">
+    <picture class="scene-picture" aria-hidden="true">
+      <img src="cockpit.png" alt="" width="1672" height="941" fetchpriority="high">
+    </picture>
+    <header class="site-header">
+      <span class="wordmark"><strong>Paradox</strong> Audio</span>
+      <nav class="site-nav" aria-label="Main navigation">
+        <button type="button" data-open="services">Services</button>
+        <button type="button" data-open="process">How it works</button>
+        <button type="button" data-open="questions">Tuning questions</button>
+      </nav>
+    </header>
+    <section class="intro">
+      <h1 id="headline">Hear what your system is capable of.</h1>
+      <p>Custom DSP tuning. Built around your seat.</p>
+      <div class="intro-actions">
+        <button type="button" data-open="services">Explore services</button>
+        <button type="button" data-open="process">How it works</button>
+      </div>
+    </section>
+    <div class="dashboard">
+      <button class="touchscreen" type="button" data-open="questions" aria-label="Open the Paradox Audio tuning touchscreen">
+        <span class="screen-reply" id="screen-reply" hidden>
+          <span class="screen-reply-label">Latest reply</span>
+          <span class="screen-reply-text"></span>
+        </span>
+        <span class="touch-label"><span class="status-light"></span> Open tuning console <span aria-hidden="true">↗</span></span>
+      </button>
+    </div>
+  </main>
+
+  <dialog class="console" aria-labelledby="console-title">
+    <div class="console-shell">
+      <header class="console-header">
+        <div>
+          <p class="console-brand"><span class="status-light"></span> Paradox Audio</p>
+          <h2 id="console-title">Tuning console</h2>
+        </div>
+        <form method="dialog">
+          <button class="close" aria-label="Close tuning console">×</button>
+        </form>
+      </header>
+      <div class="console-tabs" role="tablist" aria-label="Console views">
+        <button type="button" role="tab" id="tab-services" aria-controls="services" aria-selected="true">Services</button>
+        <button type="button" role="tab" id="tab-process" aria-controls="process" aria-selected="false" tabindex="-1">How it works</button>
+        <button type="button" role="tab" id="tab-questions" aria-controls="questions" aria-selected="false" tabindex="-1">Tuning questions</button>
+      </div>
+      <div class="console-body">
+        <section class="panel" role="tabpanel" id="services" aria-labelledby="tab-services" tabindex="0">
+          <p class="overline">Custom DSP tuning</p>
+          <h3>Dial in the system you have.</h3>
+          <dl class="service-list">
+            <div><dt>DSP setup</dt><dd>Set channel levels and crossovers for the speakers in your system.</dd></div>
+            <div><dt>Time alignment</dt><dd>Adjust channel delays to account for how far each speaker is from your seat.</dd></div>
+            <div><dt>EQ and sub integration</dt><dd>Shape the response and blend the subwoofer with the main speakers.</dd></div>
+          </dl>
+          <button class="text-action" type="button" data-open="questions">Ask about your setup <span aria-hidden="true">→</span></button>
+        </section>
+        <section class="panel" role="tabpanel" id="process" aria-labelledby="tab-process" tabindex="0" hidden>
+          <p class="overline">From setup to listening</p>
+          <h3>Built around your seat.</h3>
+          <ol class="process-list">
+            <li><strong>Start with your setup.</strong> Share your vehicle, gear and what you want to hear differently.</li>
+            <li><strong>Measure at the listening position.</strong> See how the speakers and cabin shape the response.</li>
+            <li><strong>Tune and listen.</strong> Adjust the DSP and check the result with tracks you know.</li>
+          </ol>
+          <button class="text-action" type="button" data-open="questions">Ask a tuning question <span aria-hidden="true">→</span></button>
+        </section>
+        <section class="panel questions" role="tabpanel" id="questions" aria-labelledby="tab-questions" hidden>
+          <div class="question-heading">
+            <h3>What are you tuning?</h3>
+            <span class="demo-label">Demo</span>
+          </div>
+          <div class="prompts" aria-label="Sample tuning questions">
+            <button type="button" data-question="What does a DSP do?">What does a DSP do?</button>
+            <button type="button" data-question="What is time alignment?">What is time alignment?</button>
+            <button type="button" data-question="What should I bring?">What should I bring?</button>
+          </div>
+          <div class="messages" role="log" aria-label="Tuning conversation" tabindex="0">
+            <p class="message assistant">Pick a question or type your own. This preview uses sample replies.</p>
+          </div>
+          <form class="composer">
+            <label class="sr-only" for="question-input">Your tuning question</label>
+            <input id="question-input" name="question" placeholder="Ask about DSP tuning…" maxlength="600" required autocomplete="off">
+            <button type="submit">Send <span aria-hidden="true">↑</span></button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>
