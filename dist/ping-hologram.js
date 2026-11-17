@@ -85,6 +85,10 @@
       return this.#state;
     }
 
+    get ready() {
+      return artwork;
+    }
+
     setState(state) {
       if (!Object.hasOwn(clips, state)) return;
       this.#state = state;

@@ -11,7 +11,7 @@
   <script src="console.js" defer></script>
 </head>
 <body>
-  <main class="cockpit" aria-labelledby="headline">
+  <main class="cockpit" aria-labelledby="headline" data-startup="screen">
     <picture class="scene-picture" aria-hidden="true">
       <img src="cockpit.png" alt="" width="1672" height="941" fetchpriority="high">
     </picture>
@@ -50,7 +50,7 @@
           </header>
           <section class="screen-panel questions" role="tabpanel" id="questions" aria-labelledby="tab-questions">
             <div class="chat-history" role="region" aria-label="Conversation and sample questions" tabindex="0">
-              <p class="greeting">Hi, what are you tuning?</p>
+              <div class="welcome" aria-live="polite"></div>
               <div class="prompts" role="group" aria-label="Sample tuning questions">
                 <button type="button" data-question="What does a DSP do?">DSP basics</button>
                 <button type="button" data-question="What is time alignment?">Time alignment</button>
@@ -80,6 +80,9 @@
             </ol>
             <button class="text-action" type="button" data-open="questions">Ask a tuning question <span aria-hidden="true">→</span></button>
           </section>
+        </div>
+        <div class="screen-boot" aria-hidden="true">
+          <p><strong>Paradox</strong> Audio</p>
         </div>
       </section>
     </div>

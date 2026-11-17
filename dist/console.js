@@ -1,5 +1,8 @@
 const cockpit = document.querySelector(".cockpit");
 const touchscreen = document.querySelector(".touchscreen");
+const screenInterface = touchscreen.querySelector(".screen-interface");
+const screenBoot = touchscreen.querySelector(".screen-boot");
+const welcome = touchscreen.querySelector(".welcome");
 const zoomButton = touchscreen.querySelector(".screen-zoom");
 const tabs = [...touchscreen.querySelectorAll('[role="tab"]')];
 const chatHistory = touchscreen.querySelector(".chat-history");
@@ -9,6 +12,39 @@ const questionInput = composer.elements.question;
 const statusLabel = touchscreen.querySelector(".demo-label");
 const ping = document.querySelector("ping-hologram");
 let pendingReplies = 0;
+
+function finishAnimation(element, name) {
+  const animation = element?.getAnimations?.().find(item => item.animationName === name);
+  return animation?.finished.catch(() => {});
+}
+
+async function startCockpit() {
+  const motion = matchMedia("(prefers-reduced-motion: reduce)");
+  if (!motion.matches) {
+    screenInterface.inert = true;
+    await finishAnimation(screenBoot, "screen-boot");
+    screenInterface.inert = false;
+
+    // Give the artwork time to decode without holding up the chat if it fails to load.
+    const canProject = ping?.ready && await Promise.race([
+      ping.ready.then(() => true, () => false),
+      new Promise(resolve => setTimeout(resolve, 650, false)),
+    ]);
+    if (canProject && !motion.matches) {
+      cockpit.dataset.startup = "projection";
+      await finishAnimation(ping, "pengu-project");
+    }
+  }
+  delete cockpit.dataset.startup;
+
+  const greeting = document.createElement("p");
+  greeting.className = "message assistant";
+  greeting.textContent = "Hey, I’m Pengu. I’m here to help you dial in your car audio. What are you tuning?";
+  welcome.append(greeting);
+  if (!motion.matches && !messages.childElementCount && ping?.state === "idle") {
+    ping.setState("responding");
+  }
+}
 
 const sampleReplies = new Map([
   [
@@ -172,3 +208,5 @@ window.paradoxConsole = Object.freeze({
   showView,
   showReply: reply => showReply(reply),
 });
+
+startCockpit();
