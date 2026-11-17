@@ -208,7 +208,9 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
 }
 .welcome .message {
   margin-bottom: .38em;
+  padding-block: .12em;
   color: #ffe5cb;
+  line-height: 1.25;
   animation: greeting-arrive .22s ease-out both;
 }
 @keyframes greeting-arrive {

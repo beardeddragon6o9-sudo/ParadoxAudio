@@ -39,7 +39,7 @@ async function startCockpit() {
 
   const greeting = document.createElement("p");
   greeting.className = "message assistant";
-  greeting.textContent = "Hey, I’m Pengu. I’m here to help you dial in your car audio. What are you tuning?";
+  greeting.textContent = "Hey, I’m Pengu. Ask me how a tune works or what setup details to share with our tuner.";
   welcome.append(greeting);
   if (!motion.matches && !messages.childElementCount && ping?.state === "idle") {
     ping.setState("responding");
@@ -49,15 +49,15 @@ async function startCockpit() {
 const sampleReplies = new Map([
   [
     "what does a dsp do",
-    "A digital signal processor gives you per-channel control over settings such as crossovers, levels, delay and EQ. Those controls help you tune how the system sounds from your seat.",
+    "A digital signal processor gives our tuner control over each speaker’s level, crossover, delay and EQ. Those adjustments shape what you hear from your seat.",
   ],
   [
     "what is time alignment",
-    "Speakers sit at different distances from you. Time alignment can delay the channels that arrive earlier so the sound from those speakers reaches your seat closer to the same time.",
+    "Your speakers sit at different distances from the driver’s seat. As part of a tune, our tuner can adjust each channel’s delay so the sound from each speaker reaches you at about the same time.",
   ],
   [
     "what should i bring",
-    "Have your vehicle year and model, a list of your audio equipment, and a few tracks you know well. It also helps to describe what you'd like to change about the sound.",
+    "Have your vehicle year, make and model, plus a list of your audio gear. For a tuning inquiry, it helps to tell our tuner what you’d like to change about the sound. Bring a few familiar tracks when you come in.",
   ],
 ]);
 
