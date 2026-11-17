@@ -19,24 +19,37 @@ function finishAnimation(element, name) {
   return animation?.finished.catch(() => {});
 }
 
+function loadsWithin(ready, milliseconds) {
+  return Promise.race([
+    ready.then(() => true, () => false),
+    new Promise(resolve => setTimeout(resolve, milliseconds, false)),
+  ]);
+}
+
 async function startCockpit() {
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   if (!motion.matches) {
     screenInterface.inert = true;
+    if (matchMedia("(max-width: 1080px)").matches) {
+      // Hold the wide shot until the camera move and boot animation can start together.
+      cockpit.dataset.startup = "opening";
+      const photo = cockpit.querySelector(".scene-picture img");
+      const canPan = await loadsWithin(photo.decode(), 1200);
+      cockpit.toggleAttribute("data-skip-opening", !canPan);
+      cockpit.dataset.startup = "screen";
+    }
     await finishAnimation(screenBoot, "screen-boot");
     screenInterface.inert = false;
 
     // Give the artwork time to decode without holding up the chat if it fails to load.
-    const canProject = ping?.ready && await Promise.race([
-      ping.ready.then(() => true, () => false),
-      new Promise(resolve => setTimeout(resolve, 650, false)),
-    ]);
+    const canProject = ping?.ready && await loadsWithin(ping.ready, 650);
     if (canProject && !motion.matches) {
       cockpit.dataset.startup = "projection";
       await finishAnimation(ping, "pengu-project");
     }
   }
   delete cockpit.dataset.startup;
+  cockpit.removeAttribute("data-skip-opening");
 
   const greeting = document.createElement("p");
   greeting.className = "message assistant";

@@ -26,6 +26,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
 }
 
 .cockpit {
+  --boot-duration: 1.48s;
   position: relative;
   isolation: isolate;
   width: 100%;
@@ -38,7 +39,17 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
   height: 100%;
 }
 .scene-picture { position: absolute; inset: 0; z-index: -1; }
-.display-surround { display: none; }
+.display-surround, .mobile-opening { display: none; }
+.scene-picture::after, .mobile-opening-photo::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: url("windshield.webp") center / 100% 100% no-repeat;
+  /* Blend the retouched windshield into the original cockpit photo. */
+  mask-image: linear-gradient(to right, transparent 21%, #000 27%, #000 74%, transparent 80%),
+    linear-gradient(to bottom, transparent 10.7%, #000 13.5%, #000 42.6%, transparent 46%);
+  mask-composite: intersect;
+}
 .site-nav button {
   border: 0;
   background: transparent;
@@ -54,7 +65,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
   --ping-anchor-y: 55.36%;
   --ping-width: 10.6%;
 }
-.cockpit[data-startup="screen"] ping-hologram { visibility: hidden; }
+.cockpit:is([data-startup="opening"], [data-startup="screen"]) ping-hologram { visibility: hidden; }
 .cockpit[data-startup="projection"] ping-hologram {
   animation: pengu-project .62s cubic-bezier(.22, .7, .23, 1) both;
 }
@@ -81,7 +92,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
   color: #f4eadd;
 }
 .screen-boot {
-  --boot-duration: 1.48s;
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -499,16 +509,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
     box-shadow: 0 1px 3px #0009;
     content: "";
   }
-  .scene-picture::after {
-    position: absolute;
-    inset: 0;
-    content: "";
-    background: url("windshield.webp") center / 100% 100% no-repeat;
-    /* Blend the retouched windshield into the original cockpit photo. */
-    mask-image: linear-gradient(to right, transparent 21%, #000 27%, #000 74%, transparent 80%),
-      linear-gradient(to bottom, transparent 10.7%, #000 13.5%, #000 42.6%, transparent 46%);
-    mask-composite: intersect;
-  }
   .wordmark-name {
     position: absolute;
     width: 1px;
@@ -626,6 +626,9 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
 
   .dashboard {
     --dashboard-hood-height: clamp(116px, 36cqw, 160px);
+    --dashboard-photo-zoom: 3.1;
+    --dashboard-photo-x: -109.2cqw;
+    --dashboard-photo-y: calc(var(--dashboard-hood-height) - 96.9cqw);
     position: relative;
     inset: auto;
     max-width: 630px;
@@ -643,7 +646,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
     display: block;
     content: "";
     background-repeat: no-repeat;
-    background-size: 100% 100%, 310% auto;
+    background-size: 100% 100%, calc(var(--dashboard-photo-zoom) * 100%) auto;
   }
   .dashboard::before {
     height: var(--dashboard-hood-height);
@@ -652,12 +655,12 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
     background-image:
       linear-gradient(#0b0908 var(--button-mask-end), transparent calc(var(--button-mask-end) + 25px)),
       url("cockpit.png");
-    background-position: center, 52% calc(var(--dashboard-hood-height) - 96.9cqw);
+    background-position: center, var(--dashboard-photo-x) var(--dashboard-photo-y);
   }
   .dashboard::after {
     height: 25cqw;
     background-image: linear-gradient(transparent 40%, #0b0908), url("cockpit.png");
-    background-position: center, 52% -128.8cqw;
+    background-position: center, var(--dashboard-photo-x) -128.8cqw;
   }
   .touchscreen {
     position: relative;
@@ -686,6 +689,61 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
   .composer { padding: .35em .4em; }
   .composer input { min-height: 37px; font-size: 16px; }
   .contact-form :is(input, textarea) { font-size: 16px; }
+}
+@media (max-width: 1080px) and (prefers-reduced-motion: no-preference) {
+  .cockpit:is([data-startup="opening"], [data-startup="screen"]:not([data-skip-opening])) .mobile-opening {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: block;
+    overflow: hidden;
+    background: #0b0908;
+  }
+  .cockpit[data-startup="screen"] .mobile-opening {
+    animation: cockpit-handoff var(--boot-duration) linear both;
+  }
+  .mobile-opening-photo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1672 / 941;
+    background: linear-gradient(#0b0908 1%, #0b0908f5 6%, transparent 9% 94%, #0b0908),
+      url("cockpit.png") center / 100% 100% no-repeat;
+    transform-origin: top left;
+  }
+  .cockpit[data-startup="screen"] .mobile-opening-photo {
+    animation: cockpit-approach var(--boot-duration) cubic-bezier(.4, 0, .2, 1) both;
+  }
+  /* Cover the artwork's display until the working screen comes into view. */
+  .mobile-opening-photo::before {
+    position: absolute;
+    inset: 56.92% 36.4% 28.44% 39.41%;
+    clip-path: polygon(1.6% 0, 98.4% 0, 100% 100%, 0 100%);
+    background: #080706;
+    content: "";
+  }
+  /* Fade out the old bezel and console before revealing the taller live display. */
+  .cockpit[data-startup="screen"] .mobile-opening::after {
+    position: absolute;
+    inset: calc(var(--dashboard-hood-height) - 12px) 0 0;
+    background: linear-gradient(transparent, #0b0908 20px);
+    animation: cockpit-display-fade var(--boot-duration) ease-in-out both;
+    content: "";
+  }
+}
+@keyframes cockpit-approach {
+  0%, 32% { transform: translate(0, 0) scale(1); }
+  76%, 100% {
+    transform: translate(var(--dashboard-photo-x), var(--dashboard-photo-y))
+      scale(var(--dashboard-photo-zoom));
+  }
+}
+@keyframes cockpit-display-fade {
+  0%, 48% { opacity: 0; }
+  65%, 100% { opacity: 1; }
+}
+@keyframes cockpit-handoff {
+  0%, 65% { opacity: 1; }
+  82%, 100% { opacity: 0; }
 }
 @media (max-width: 1260px) {
   .screen-bar { padding-inline: .35em; }
