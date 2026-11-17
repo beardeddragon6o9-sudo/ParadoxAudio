@@ -343,6 +343,47 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
 .text-action:hover { text-decoration: underline; }
 
 @media (min-width: 1081px) {
+  .instrument-labels { position: absolute; inset: 0; }
+  .instrument-labels::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: url("gauge-faces.webp") center / 100% 100% no-repeat;
+    /* Keep the original rings, needles and shadows. Reveal the repair over the old labels only. */
+    mask-image:
+      radial-gradient(ellipse .26% .45% at 18.421% 63.549%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 18.900% 61.743%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 19.737% 59.405%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 20.933% 58.874%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 22.069% 59.405%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 23.983% 59.511%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 25.060% 57.705%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 26.376% 57.173%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 27.751% 57.705%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 28.589% 59.511%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 28.828% 61.849%, #000 68%, transparent 100%),
+      radial-gradient(ellipse .39% .61% at 28.469% 63.974%, #000 68%, transparent 100%);
+  }
+  .instrument-labels span {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    transform: translate(-50%, -50%);
+    color: #9a6843;
+    font: 600 .32vw/1 "Arial Narrow", Arial, sans-serif;
+    white-space: nowrap;
+  }
+  .instrument-labels span:not(.dial-unit)::before {
+    position: absolute;
+    z-index: -1;
+    inset: -.42em -.55em;
+    background: radial-gradient(ellipse, #100b07 35%, #100b078c 60%, transparent 74%);
+    content: "";
+  }
+  .instrument-labels .dial-unit {
+    color: #8e5f3d;
+    font-size: .24vw;
+  }
   .scene-picture::before {
     position: absolute;
     left: 21.65%;
