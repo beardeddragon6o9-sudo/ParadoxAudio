@@ -38,6 +38,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
   height: 100%;
 }
 .scene-picture { position: absolute; inset: 0; z-index: -1; }
+.display-surround { display: none; }
 .site-nav button {
   border: 0;
   background: transparent;
@@ -65,9 +66,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
 .touchscreen {
   position: absolute;
   left: 39.41%;
-  top: 56.92%;
   width: 24.19%;
-  height: 14.64%;
   pointer-events: auto;
   clip-path: polygon(1.6% 0, 98.4% 0, 100% 100%, 0 100%);
   background: #080706;
@@ -343,6 +342,50 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
 .text-action:hover { text-decoration: underline; }
 
 @media (min-width: 1081px) {
+  .cockpit {
+    /* Source-image coordinates for the screen and the photographed bezel. */
+    --bezel-top: 55.36%;
+    --bezel-height: 176;
+    --screen-extension: 54;
+    --screen-extension-y: calc(var(--screen-extension) / 941 * 100%);
+    --screen-top: 56.92%;
+    --screen-height: calc(14.64% + var(--screen-extension-y));
+    --zoom-origin-y: 64.24%;
+    --zoom-scale: 2.15;
+  }
+  .touchscreen {
+    top: var(--screen-top);
+    height: var(--screen-height);
+  }
+  .display-surround {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+  }
+  .display-surround::before, .display-surround::after {
+    position: absolute;
+    inset: 0;
+    background: url("cockpit.png") center / 100% 100% no-repeat;
+    content: "";
+  }
+  /* Move the center vents and controls down, blending into the surrounding trim. */
+  .display-surround::before {
+    transform: translateY(var(--screen-extension-y));
+    mask-image: radial-gradient(ellipse 19.5% 26% at 51.5% calc(100% - var(--screen-extension-y)),
+      #000 86%, transparent 100%);
+  }
+  /* Extend the bezel from its top edge, where Pengu's projection lands. */
+  .display-surround::after {
+    transform-origin: center var(--bezel-top);
+    transform: scaleY(calc(1 + var(--screen-extension) / var(--bezel-height)));
+    clip-path: polygon(37.98% 55.79%, 38.76% 55.15%, 63.82% 55.15%, 64.53% 55.58%,
+      64.95% 56.54%, 65.19% 60.57%, 65.49% 63.87%, 65.58% 65.36%, 65.97% 66.95%,
+      66.33% 68.76%, 66.33% 69.39%, 66.21% 70.35%, 66.09% 71.73%, 65.79% 72.9%,
+      65.55% 73.54%, 65.19% 74.07%, 64.71% 74.28%, 38.16% 74.28%, 37.62% 73.86%,
+      37.38% 73.22%, 37.26% 72.16%);
+    mask-image: linear-gradient(to right, #000 65.55%, transparent 66.33%);
+  }
   .instrument-labels { position: absolute; inset: 0; }
   .instrument-labels::before {
     position: absolute;
@@ -520,14 +563,36 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
   }
 
   .scene-picture, .dashboard {
-    transform-origin: 51.5% 64.24%;
+    transform-origin: 51.5% var(--zoom-origin-y);
     transition: transform .45s cubic-bezier(.22, .7, .24, 1);
   }
   .cockpit[data-zoomed] :is(.scene-picture, .dashboard) {
-    transform: translate(-1.5%, -18.5%) scale(2.15);
+    --zoom-top: calc(var(--zoom-origin-y) + (var(--bezel-top) - var(--zoom-origin-y)) * var(--zoom-scale));
+    --zoom-bottom: calc(var(--zoom-top) + (var(--bezel-height) + var(--screen-extension)) / 941 * 100% * var(--zoom-scale));
+    --zoom-pan: max(calc(1rem - var(--zoom-top)), min(-18.5%, calc(100svh - 1rem - var(--zoom-bottom))));
+    transform: translate(-1.5%, var(--zoom-pan)) scale(var(--zoom-scale));
   }
   .cockpit[data-zoomed] :is(.site-header, .intro) { visibility: hidden; }
-  .cockpit[data-zoomed] .touchscreen { font-size: clamp(9px, .62vw, 13px); }
+  .cockpit[data-zoomed] .touchscreen {
+    font-size: calc(clamp(.925rem, .97vw, 1.075rem) / var(--zoom-scale));
+    scroll-margin-block: 1rem;
+  }
+  .cockpit[data-zoomed] :is(.screen-bar, .chat-history, .information, .composer) {
+    padding-inline: max(.6em, 1.7%);
+  }
+  .cockpit[data-zoomed] :is(.contact-email, .contact-greeting) {
+    margin-bottom: .35em;
+  }
+  .cockpit[data-zoomed] .contact-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: .3em;
+  }
+  .cockpit[data-zoomed] .contact-form :is(label:has([name="vehicle"]), .contact-status) {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 1081px) and (min-aspect-ratio: 4 / 1) {
+  .cockpit { --zoom-scale: 1.55; }
 }
 
 @media (max-width: 1080px) {

@@ -1,4 +1,5 @@
 const cockpit = document.querySelector(".cockpit");
+const dashboard = cockpit.querySelector(".dashboard");
 const touchscreen = document.querySelector(".touchscreen");
 const screenInterface = touchscreen.querySelector(".screen-interface");
 const screenBoot = touchscreen.querySelector(".screen-boot");
@@ -244,12 +245,20 @@ composer.addEventListener("submit", (event) => {
   questionInput.focus({ preventScroll: true });
 });
 
-function setZoom(zoomed) {
+async function setZoom(zoomed) {
   cockpit.toggleAttribute("data-zoomed", zoomed);
   const label = zoomed ? "Return to full cockpit" : "Zoom touchscreen";
   zoomButton.setAttribute("aria-pressed", String(zoomed));
   zoomButton.setAttribute("aria-label", label);
   zoomButton.title = label;
+
+  const transition = dashboard.getAnimations?.().find(animation => animation.transitionProperty === "transform");
+  try {
+    await transition?.finished;
+  } catch {
+    return;
+  }
+  touchscreen.scrollIntoView({ block: "nearest" });
 }
 
 zoomButton.addEventListener("click", () => setZoom(!cockpit.hasAttribute("data-zoomed")));
