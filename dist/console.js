@@ -39,7 +39,7 @@ async function startCockpit() {
 
   const greeting = document.createElement("p");
   greeting.className = "message assistant";
-  greeting.textContent = "Hey, I’m Pengu. Ask me how a tune works or what setup details to share with our tuner.";
+  greeting.textContent = "Hey, I’m Pengu. Welcome to Paradox Audio! We offer car audio tuning, including in-person and remote DSP tuning. I’m here to help with any questions. Let’s get your audio system dialed!";
   welcome.append(greeting);
   if (!motion.matches && !messages.childElementCount && ping?.state === "idle") {
     ping.setState("responding");
