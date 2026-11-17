@@ -277,16 +277,44 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
 }
 .composer button { border-radius: .4em; padding: .21em .58em; }
 .composer button:hover, .intro-actions button:first-child:hover { background: #ffd1a6; }
-.service-list, .process-list { margin: 0; }
-.service-list div, .process-list li {
+.service-list details + details, .process-list li + li { border-top: 1px solid #3d2c22; }
+.service-list summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) .75em;
+  align-items: center;
+  gap: .6em;
+  padding: .5em .35em;
+  list-style: none;
+  color: #ffdec1;
+  font-weight: 600;
+  cursor: pointer;
+}
+.service-list summary::-webkit-details-marker { display: none; }
+.service-list summary::after {
+  width: .42em;
+  height: .42em;
+  justify-self: center;
+  border: solid var(--copper);
+  border-width: 0 1px 1px 0;
+  transform: translateY(-.1em) rotate(45deg);
+  content: "";
+}
+.service-list details[open] > summary::after { transform: translateY(.1em) rotate(225deg); }
+.service-list summary:hover, .service-list details[open] > summary { background: #e4a16a18; }
+.service-list summary:focus-visible { outline: 2px solid #ffd4ac; }
+.service-list p {
+  margin: 0;
+  padding: .35em .75em .65em .35em;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.process-list { margin: 0; padding-left: 1.3em; }
+.process-list li {
   padding: .33em 0;
   line-height: 1.35;
   color: var(--muted);
 }
-.service-list div + div, .process-list li + li { border-top: 1px solid #3d2c22; }
-.service-list dt, .process-list strong { color: #ffdec1; font-weight: 600; }
-.service-list dd { margin: .15em 0 0; }
-.process-list { padding-left: 1.3em; }
+.process-list strong { color: #ffdec1; font-weight: 600; }
 .process-list li::marker { color: var(--copper); }
 .text-action {
   padding: .45em 0;
@@ -422,6 +450,7 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   .screen-tabs button { min-height: 37px; padding-inline: .46em; font-size: .88em; }
   .screen-zoom { display: none; }
   .chat-history, .information { padding: .55em .6em; }
+  .service-list summary { min-height: 33px; }
   .prompts button { min-height: 30px; }
   .message { padding: .4em .58em; }
   .composer { padding: .35em .4em; }

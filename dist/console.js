@@ -10,6 +10,7 @@ const messages = touchscreen.querySelector(".messages");
 const composer = touchscreen.querySelector(".composer");
 const questionInput = composer.elements.question;
 const statusLabel = touchscreen.querySelector(".demo-label");
+const servicePanel = touchscreen.querySelector("#services");
 const ping = document.querySelector("ping-hologram");
 let pendingReplies = 0;
 
@@ -157,6 +158,21 @@ ping?.addEventListener("pingstatechange", ({ detail }) => {
 
 document.querySelectorAll("[data-open]").forEach((button) => {
   button.addEventListener("click", () => showView(button.dataset.open));
+});
+
+servicePanel.querySelectorAll("details").forEach(service => {
+  service.addEventListener("toggle", () => {
+    if (!service.open || servicePanel.hidden) return;
+
+    const top = service.offsetTop;
+    const bottom = top + service.offsetHeight;
+    const panelBottom = servicePanel.scrollTop + servicePanel.clientHeight;
+    if (top < servicePanel.scrollTop) {
+      servicePanel.scrollTop = top;
+    } else if (bottom > panelBottom) {
+      servicePanel.scrollTop = Math.min(top, bottom - servicePanel.clientHeight);
+    }
+  });
 });
 
 tabs.forEach((tab, index) => {

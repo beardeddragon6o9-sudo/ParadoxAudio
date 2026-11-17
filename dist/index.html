@@ -65,11 +65,32 @@
             </form>
           </section>
           <section class="screen-panel information" role="tabpanel" id="services" aria-labelledby="tab-services" tabindex="0" hidden>
-            <dl class="service-list">
-              <div><dt>DSP setup</dt><dd>Set channel levels and crossovers for the speakers in your system.</dd></div>
-              <div><dt>Time alignment</dt><dd>Adjust channel delays to account for how far each speaker is from your seat.</dd></div>
-              <div><dt>EQ and sub integration</dt><dd>Shape the response and blend the subwoofer with the main speakers.</dd></div>
-            </dl>
+            <div class="service-list">
+              <details name="tuning-service">
+                <summary>Full Advanced Tuning with REW</summary>
+                <p>A complete DSP tune using REW measurements. We set crossovers, EQ each speaker, match levels, check time alignment and phase, and make a final EQ pass with the whole system playing.</p>
+              </details>
+              <details name="tuning-service">
+                <summary>Setting Ideal Crossovers</summary>
+                <p>We measure each speaker’s natural roll-off to find crossover points that let it hand off smoothly to the next driver. We work around wide nulls and keep each speaker within its mechanical limits.</p>
+              </details>
+              <details name="tuning-service">
+                <summary>Single-Speaker EQ</summary>
+                <p>We measure each speaker in isolation to see how cabin gain affects its response. We tame peaks and favor cuts over boosts to preserve headroom.</p>
+              </details>
+              <details name="tuning-service">
+                <summary>Level Matching</summary>
+                <p>After individual speaker EQ, we measure each channel at the intended listening position and adjust its level so the speakers play in balance. Then we move on to timing and phase.</p>
+              </details>
+              <details name="tuning-service">
+                <summary>Time Alignment and Phase</summary>
+                <p>We measure from the intended listening position to set precise delays for a tight center image and bass that sounds like it’s coming from up front. Tone sweeps show where speakers add together or cancel. We adjust delay or polarity as needed so the drivers hand off smoothly.</p>
+              </details>
+              <details name="tuning-service">
+                <summary>Final EQ</summary>
+                <p>After time alignment and phase are set, we measure the system as a whole. We make small, broad EQ changes where needed to keep the speakers in balance and preserve the alignment and phase work.</p>
+              </details>
+            </div>
             <button class="text-action" type="button" data-open="questions">Ask about your setup <span aria-hidden="true">→</span></button>
           </section>
           <section class="screen-panel information" role="tabpanel" id="process" aria-labelledby="tab-process" tabindex="0" hidden>
