@@ -1,6 +1,6 @@
 # Paradox Audio
 
-Open `dist/index.html` in a browser to use the prototype. The dashboard touchscreen wakes into the question view when the page loads. Questions, replies, services and the tuning process stay inside the display. On desktop the screen's zoom button brings the dashboard closer. On narrow screens the screen is taller, with room for typing and scrolling.
+Open `dist/index.html` in a browser to use the prototype. The dashboard touchscreen wakes into the question view when the page loads. Questions, replies, services and tuning prerequisites stay inside the display. On desktop the screen's zoom button brings the dashboard closer. On narrow screens the screen is taller, with room for typing and scrolling.
 
 ## Deploy on Vercel
 
@@ -15,5 +15,7 @@ A custom integration can listen for `paradox:question` on `window` and call `eve
 Call `window.paradoxConsole.showView(view)` to switch the touchscreen to one of these views. The method returns `false` for an unknown view.
 
 - `services`
-- `process`
+- `prerequisites`
 - `questions`
+
+The legacy `process` view opens Services.

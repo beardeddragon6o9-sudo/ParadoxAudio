@@ -19,7 +19,7 @@
       <span class="wordmark"><strong>Paradox</strong> Audio</span>
       <nav class="site-nav" aria-label="Main navigation">
         <button type="button" data-open="services">Services</button>
-        <button type="button" data-open="process">How it works</button>
+        <button type="button" data-open="services">How it works</button>
         <button type="button" data-open="questions">Tuning questions</button>
       </nav>
     </header>
@@ -28,7 +28,7 @@
       <p>Custom DSP tuning. Built around your seat.</p>
       <div class="intro-actions">
         <button type="button" data-open="services">Explore services</button>
-        <button type="button" data-open="process">How it works</button>
+        <button type="button" data-open="services">How it works</button>
       </div>
     </section>
     <div class="dashboard">
@@ -39,7 +39,7 @@
             <div class="screen-tabs" role="tablist" aria-label="Screen views">
               <button type="button" role="tab" id="tab-questions" aria-controls="questions" aria-selected="true">Ask</button>
               <button type="button" role="tab" id="tab-services" aria-controls="services" aria-selected="false" tabindex="-1">Services</button>
-              <button type="button" role="tab" id="tab-process" aria-controls="process" aria-selected="false" tabindex="-1">How it works</button>
+              <button type="button" role="tab" id="tab-prerequisites" aria-controls="prerequisites" aria-selected="false" tabindex="-1">Prerequisites</button>
             </div>
             <div class="screen-controls">
               <span class="demo-label">Demo</span>
@@ -53,6 +53,7 @@
               <div class="welcome" aria-live="polite"></div>
               <div class="prompts" role="group" aria-label="Sample tuning questions">
                 <button type="button" data-question="What does a DSP do?">DSP basics</button>
+                <button type="button" data-question="What is REW?">REW</button>
                 <button type="button" data-question="What is time alignment?">Time alignment</button>
                 <button type="button" data-question="What should I bring?">What to bring</button>
               </div>
@@ -65,7 +66,7 @@
             </form>
           </section>
           <section class="screen-panel information" role="tabpanel" id="services" aria-labelledby="tab-services" tabindex="0" hidden>
-            <div class="service-list">
+            <div class="screen-disclosures">
               <details name="tuning-service">
                 <summary>Full Advanced Tuning with REW</summary>
                 <p>A complete DSP tune using REW measurements. It includes crossover setup, individual speaker EQ, level matching, time alignment and phase, and final EQ work.</p>
@@ -93,12 +94,24 @@
             </div>
             <button class="text-action" type="button" data-open="questions">Ask about your setup <span aria-hidden="true">→</span></button>
           </section>
-          <section class="screen-panel information" role="tabpanel" id="process" aria-labelledby="tab-process" tabindex="0" hidden>
-            <ol class="process-list">
-              <li><strong>Start with your setup.</strong> Share your vehicle, gear and what you want to hear differently.</li>
-              <li><strong>Measure at the listening position.</strong> See how the speakers and cabin shape the response.</li>
-              <li><strong>Tune and listen.</strong> Adjust the DSP and check the result with tracks you know.</li>
-            </ol>
+          <section class="screen-panel information" role="tabpanel" id="prerequisites" aria-labelledby="tab-prerequisites" tabindex="0" hidden>
+            <div class="screen-disclosures">
+              <details name="tuning-prerequisites">
+                <summary>In-Person Tuning</summary>
+                <p>Bring a drivable, insured vehicle with a fully installed and working sound system and DSP.</p>
+              </details>
+              <details name="tuning-prerequisites">
+                <summary>Remote Tuning</summary>
+                <ul class="prep-checklist">
+                  <li><strong>Sound system and DSP.</strong> Both should be fully installed and working. Having the gains set ahead of time is preferred. Our tuner can adjust them based on the measurements.</li>
+                  <li><strong>Measurement microphone.</strong> Use a proper measurement mic. Our budget pick is the <a href="https://www.minidsp.com/products/acoustic-measurement/umik-1/" target="_blank" rel="noopener">miniDSP UMIK-1</a>.</li>
+                  <li><strong>Audio source.</strong> Have a source that can play the test files we’ll send you.</li>
+                  <li><strong>Laptop and software.</strong> Set up a fresh user account on your laptop. Install <a href="https://rustdesk.com/" target="_blank" rel="noopener">RustDesk</a> for remote desktop access, <a href="https://www.roomeqwizard.com/" target="_blank" rel="noopener">REW</a>, and your DSP’s control software. Have a stable internet connection.</li>
+                  <li><strong>Quiet location and battery power.</strong> Use a reasonably quiet spot. We recommend tuning with the engine off, so have a battery charger available during or after the session.</li>
+                  <li><strong>Someone at the vehicle.</strong> Set the seat to your comfortable listening position. Move the mic around where your head would be for pink-noise EQ measurements, then place it at the center of that position for alignment and sweeps.</li>
+                </ul>
+              </details>
+            </div>
             <button class="text-action" type="button" data-open="questions">Ask a tuning question <span aria-hidden="true">→</span></button>
           </section>
         </div>

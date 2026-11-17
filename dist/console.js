@@ -10,7 +10,6 @@ const messages = touchscreen.querySelector(".messages");
 const composer = touchscreen.querySelector(".composer");
 const questionInput = composer.elements.question;
 const statusLabel = touchscreen.querySelector(".demo-label");
-const servicePanel = touchscreen.querySelector("#services");
 const ping = document.querySelector("ping-hologram");
 let pendingReplies = 0;
 
@@ -53,16 +52,21 @@ const sampleReplies = new Map([
     "A digital signal processor gives our tuner control over each speaker’s level, crossover, delay and EQ. Those adjustments shape what you hear from your seat.",
   ],
   [
+    "what is rew",
+    "REW stands for Room EQ Wizard. Our tuner uses it with a measurement mic to see how your speakers respond from the listening position and check how they work together.",
+  ],
+  [
     "what is time alignment",
     "Your speakers sit at different distances from the driver’s seat. As part of a tune, our tuner can adjust each channel’s delay so the sound from each speaker reaches you at about the same time.",
   ],
   [
     "what should i bring",
-    "Have your vehicle year, make and model, plus a list of your audio gear. For a tuning inquiry, it helps to tell our tuner what you’d like to change about the sound. Bring a few familiar tracks when you come in.",
+    "For an in-person tune, bring a drivable, insured vehicle with a working installed sound system and DSP. For a remote tune, open Prerequisites for the equipment and software checklist.",
   ],
 ]);
 
 function showView(view) {
+  if (view === "process") view = "services";
   const activeTab = tabs.find((tab) => tab.getAttribute("aria-controls") === view);
   if (!activeTab) return false;
 
@@ -160,17 +164,18 @@ document.querySelectorAll("[data-open]").forEach((button) => {
   button.addEventListener("click", () => showView(button.dataset.open));
 });
 
-servicePanel.querySelectorAll("details").forEach(service => {
-  service.addEventListener("toggle", () => {
-    if (!service.open || servicePanel.hidden) return;
+touchscreen.querySelectorAll(".screen-disclosures details").forEach(item => {
+  const panel = item.closest(".information");
+  item.addEventListener("toggle", () => {
+    if (!item.open || panel.hidden) return;
 
-    const top = service.offsetTop;
-    const bottom = top + service.offsetHeight;
-    const panelBottom = servicePanel.scrollTop + servicePanel.clientHeight;
-    if (top < servicePanel.scrollTop) {
-      servicePanel.scrollTop = top;
+    const top = item.offsetTop;
+    const bottom = top + item.offsetHeight;
+    const panelBottom = panel.scrollTop + panel.clientHeight;
+    if (top < panel.scrollTop) {
+      panel.scrollTop = top;
     } else if (bottom > panelBottom) {
-      servicePanel.scrollTop = Math.min(top, bottom - servicePanel.clientHeight);
+      panel.scrollTop = Math.min(top, bottom - panel.clientHeight);
     }
   });
 });
