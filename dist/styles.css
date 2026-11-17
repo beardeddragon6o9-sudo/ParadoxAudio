@@ -351,11 +351,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
     background: url("gauge-faces.webp") center / 100% 100% no-repeat;
     /* Keep the original rings, needles and shadows. Reveal the repair over the old labels only. */
     mask-image:
-      radial-gradient(ellipse .26% .45% at 18.421% 63.549%, #000 68%, transparent 100%),
-      radial-gradient(ellipse .39% .61% at 18.900% 61.743%, #000 68%, transparent 100%),
-      radial-gradient(ellipse .39% .61% at 19.737% 59.405%, #000 68%, transparent 100%),
-      radial-gradient(ellipse .39% .61% at 20.933% 58.874%, #000 68%, transparent 100%),
-      radial-gradient(ellipse .39% .61% at 22.069% 59.405%, #000 68%, transparent 100%),
       radial-gradient(ellipse .39% .61% at 23.983% 59.511%, #000 68%, transparent 100%),
       radial-gradient(ellipse .39% .61% at 25.060% 57.705%, #000 68%, transparent 100%),
       radial-gradient(ellipse .39% .61% at 26.376% 57.173%, #000 68%, transparent 100%),
@@ -383,6 +378,70 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
   .instrument-labels .dial-unit {
     color: #8e5f3d;
     font-size: .24vw;
+  }
+  .speedometer {
+    --start: -130deg;
+    --sweep: 260deg;
+    --major-step: calc(var(--sweep) / 6);
+    --minor-step: calc(var(--major-step) / 5);
+    --sweep-mask: conic-gradient(from var(--start),
+      #000 0deg var(--sweep), transparent var(--sweep));
+    position: absolute;
+    left: 18.092%;
+    top: 57.545%;
+    width: 5.622%;
+    aspect-ratio: 1;
+    /* Follow the steering wheel rim and the edge of the adjacent dial. */
+    clip-path: polygon(0 0, 89% 0, 86% 18%, 85% 28%, 71% 30%, 60% 31%,
+      50% 33%, 42% 37%, 33% 41%, 25% 46%, 17% 53%, 8% 60%, 0 63%);
+  }
+  .speedometer-face, .speedometer::before, .speedometer::after {
+    position: absolute;
+    inset: 0;
+  }
+  .speedometer-face {
+    /* Align the 94 px dial area to the corresponding pixels in the cockpit image. */
+    background: url("speedometer-face.webp") 19.170% 63.931% / 1778.72% auto no-repeat;
+    mask-image: radial-gradient(circle closest-side,
+      transparent 54%, #000 65% 93%, transparent 97%);
+  }
+  .speedometer::before, .speedometer::after {
+    z-index: 1;
+    content: "";
+    mask-composite: intersect;
+    filter: blur(.012vw);
+  }
+  .speedometer::before {
+    background: repeating-conic-gradient(from calc(var(--start) - .35deg),
+      #65462d 0deg .7deg, transparent .7deg var(--minor-step));
+    mask-image: radial-gradient(circle closest-side,
+      transparent 88.4%, #000 89.5% 93%, transparent 94%), var(--sweep-mask);
+  }
+  .speedometer::after {
+    background: repeating-conic-gradient(from calc(var(--start) - .6deg),
+      #825839 0deg 1.2deg, transparent 1.2deg var(--major-step));
+    mask-image: radial-gradient(circle closest-side,
+      transparent 85%, #000 86.5% 93.4%, transparent 94.4%), var(--sweep-mask);
+  }
+  .speedometer span {
+    position: absolute;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    color: #886344;
+    font: 400 .26vw/1 "Arial Narrow", Arial, sans-serif;
+    filter: blur(.012vw);
+    white-space: nowrap;
+  }
+  .speed-number {
+    --angle: calc(var(--start) + var(--step) * var(--major-step));
+    left: calc(50% + 37% * sin(var(--angle)));
+    top: calc(50% - 37% * cos(var(--angle)));
+  }
+  .speedometer .speed-unit {
+    left: 50%;
+    top: 25%;
+    color: #795537;
+    font-size: .19vw;
   }
   .scene-picture::before {
     position: absolute;
