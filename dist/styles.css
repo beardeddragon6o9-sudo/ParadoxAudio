@@ -26,7 +26,9 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
 }
 
 .cockpit {
-  --boot-duration: 1.48s;
+  --startup-duration-multiplier: 1;
+  --boot-duration: calc(1.48s * var(--startup-duration-multiplier));
+  --projection-duration: calc(.62s * var(--startup-duration-multiplier));
   position: relative;
   isolation: isolate;
   width: 100%;
@@ -67,7 +69,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
 }
 .cockpit:is([data-startup="opening"], [data-startup="screen"]) ping-hologram { visibility: hidden; }
 .cockpit[data-startup="projection"] ping-hologram {
-  animation: pengu-project .62s cubic-bezier(.22, .7, .23, 1) both;
+  animation: pengu-project var(--projection-duration) cubic-bezier(.22, .7, .23, 1) both;
 }
 @keyframes pengu-project {
   0% { clip-path: inset(96% 0 0); opacity: .22; }
@@ -691,6 +693,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
   .contact-form :is(input, textarea) { font-size: 16px; }
 }
 @media (max-width: 1080px) and (prefers-reduced-motion: no-preference) {
+  .cockpit { --startup-duration-multiplier: 3; }
   .cockpit[data-mobile-opening] .dashboard {
     --camera-hold: 2.2s;
     --camera-move: 2.8s;

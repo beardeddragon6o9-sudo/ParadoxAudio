@@ -32,6 +32,13 @@ function endMobileOpening() {
   delete cockpit.dataset.mobileOpening;
 }
 
+function skipMobileIntro() {
+  if (!cockpit.hasAttribute("data-mobile-opening")) return;
+  endMobileOpening();
+  delete cockpit.dataset.startup;
+  screenInterface.inert = false;
+}
+
 async function startCockpit() {
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   if (!motion.matches) {
@@ -44,14 +51,14 @@ async function startCockpit() {
       const photo = cockpit.querySelector(".scene-picture img");
       const canPan = await loadsWithin(photo.decode(), 1200);
       if (!canPan) endMobileOpening();
-      cockpit.dataset.startup = "screen";
+      if (cockpit.dataset.startup === "opening") cockpit.dataset.startup = "screen";
     }
     await finishAnimation(screenBoot, "screen-boot");
     screenInterface.inert = false;
 
     // Give the artwork time to decode without holding up the chat if it fails to load.
     const canProject = ping?.ready && await loadsWithin(ping.ready, 650);
-    if (canProject && !motion.matches) {
+    if (canProject && !motion.matches && cockpit.dataset.startup === "screen") {
       cockpit.dataset.startup = "projection";
       await finishAnimation(ping, "pengu-project");
     }
@@ -97,7 +104,7 @@ function showView(view) {
   const activeTab = tabs.find((tab) => tab.getAttribute("aria-controls") === view);
   if (!activeTab) return false;
 
-  endMobileOpening();
+  skipMobileIntro();
   const changed = activeTab.getAttribute("aria-selected") !== "true";
   for (const tab of tabs) {
     const selected = tab === activeTab;
