@@ -39,7 +39,7 @@ async function startCockpit() {
 
   const greeting = document.createElement("p");
   greeting.className = "message assistant";
-  greeting.textContent = "Hey, I’m Pengu. Welcome to Paradox Audio! We offer car audio tuning, including in-person and remote DSP tuning. I’m here to help with any questions. Let’s get your audio system dialed!";
+  greeting.textContent = "Hey, I’m Pengu. Welcome to Paradox Audio! Located in Kelowna, BC, we offer car audio tuning, including in-person and remote DSP tuning. I’m here to help with any questions. Let’s get your audio system dialed!";
   welcome.append(greeting);
   if (!motion.matches && !messages.childElementCount && ping?.state === "idle") {
     ping.setState("responding");
