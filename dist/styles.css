@@ -366,13 +366,22 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
       linear-gradient(to bottom, transparent 10.7%, #000 13.5%, #000 42.6%, transparent 46%);
     mask-composite: intersect;
   }
-  .wordmark {
+  .wordmark-name {
     position: absolute;
     width: 1px;
     height: 1px;
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+  .wordmark-tuning {
+    position: absolute;
+    top: 3.43%;
+    left: 25.35%;
+    color: #e0d6c8;
+    font: 400 1.3vw/1 "Instrument Sans", "Segoe UI", sans-serif;
+    letter-spacing: .29em;
+    text-transform: uppercase;
   }
   .site-nav button {
     position: absolute;
