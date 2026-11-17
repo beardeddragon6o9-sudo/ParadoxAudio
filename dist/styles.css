@@ -26,9 +26,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
 }
 
 .cockpit {
-  --startup-duration-multiplier: 1;
-  --boot-duration: calc(1.48s * var(--startup-duration-multiplier));
-  --projection-duration: calc(.62s * var(--startup-duration-multiplier));
+  --boot-duration: 4.44s;
+  --projection-duration: 1.86s;
   position: relative;
   isolation: isolate;
   width: 100%;
@@ -693,7 +692,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:fo
   .contact-form :is(input, textarea) { font-size: 16px; }
 }
 @media (max-width: 1080px) and (prefers-reduced-motion: no-preference) {
-  .cockpit { --startup-duration-multiplier: 3; }
   .cockpit[data-mobile-opening] .dashboard {
     --camera-hold: 2.2s;
     --camera-move: 2.8s;
