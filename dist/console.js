@@ -6,6 +6,7 @@ const chatHistory = touchscreen.querySelector(".chat-history");
 const messages = touchscreen.querySelector(".messages");
 const composer = touchscreen.querySelector(".composer");
 const questionInput = composer.elements.question;
+const statusLabel = touchscreen.querySelector(".demo-label");
 const ping = document.querySelector("ping-hologram");
 let pendingReplies = 0;
 
@@ -49,39 +50,69 @@ function scrollToLatestMessage() {
   }
 }
 
-function appendMessage(role, content) {
+function appendMessage(role, content, after) {
   const message = document.createElement("p");
   message.classList.add("message", role);
   message.textContent = content;
-  messages.append(message);
+  if (after) after.after(message);
+  else messages.append(message);
   scrollToLatestMessage();
+  return message;
 }
 
-function showReply(reply) {
+function showReply(reply, questionMessage) {
   if (typeof reply !== "string" || !reply.trim()) return false;
 
-  appendMessage("assistant", reply.trim());
+  appendMessage("assistant", reply.trim(), questionMessage);
   pendingReplies = Math.max(0, pendingReplies - 1);
   ping?.setState?.("responding");
   return true;
+}
+
+function showSampleReply(question, questionMessage) {
+  statusLabel.textContent = "Demo";
+  const key = question.toLowerCase().replace(/[?.!]+$/, "");
+  showReply(sampleReplies.get(key) ??
+    "I can answer the sample questions in this demo. Scroll up to try one.", questionMessage);
+}
+
+async function requestAssistant(question, questionMessage) {
+  try {
+    const response = await fetch("/api/tune", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+      signal: AbortSignal.timeout(22_000),
+    });
+    if (response.status === 404) {
+      showSampleReply(question, questionMessage);
+      return;
+    }
+    if (!response.ok) throw new Error("Tuning request failed");
+
+    const result = await response.json();
+    if (!showReply(result?.reply, questionMessage)) throw new Error("Empty tuning reply");
+    statusLabel.textContent = "Live";
+  } catch {
+    showReply("I couldn’t answer that right now. Please try again in a moment.", questionMessage);
+  }
 }
 
 function submitQuestion(value) {
   const question = value.trim();
   if (!question) return;
 
-  appendMessage("visitor", question);
+  const questionMessage = appendMessage("visitor", question);
   pendingReplies += 1;
   ping?.setState?.("thinking");
-  const useSampleReply = window.dispatchEvent(new CustomEvent("paradox:question", {
+  const useBuiltInAssistant = window.dispatchEvent(new CustomEvent("paradox:question", {
     cancelable: true,
     detail: { question },
   }));
-  if (useSampleReply) {
-    const key = question.toLowerCase().replace(/[?.!]+$/, "");
-    showReply(sampleReplies.get(key) ??
-      "I can answer the sample questions in this demo. Scroll up to try one.");
-  }
+  if (!useBuiltInAssistant) return;
+
+  if (window.location.protocol === "file:") showSampleReply(question, questionMessage);
+  else requestAssistant(question, questionMessage);
 }
 
 ping?.addEventListener("pingstatechange", ({ detail }) => {
@@ -139,5 +170,5 @@ touchscreen.addEventListener("keydown", (event) => {
 
 window.paradoxConsole = Object.freeze({
   showView,
-  showReply,
+  showReply: reply => showReply(reply),
 });

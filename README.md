@@ -8,7 +8,9 @@ Import the GitHub repo in Vercel and leave the Root Directory at the repository 
 
 ## Connecting an assistant
 
-The question flow uses sample replies by default. For a live assistant, add a Vercel Function at `api/tune.mjs` at the repository root and store the provider key in the Vercel project's Environment Variables. A client integration can listen for `paradox:question` on `window` and call `event.preventDefault()` synchronously to take over the response. Send `event.detail.question` to `/api/tune` and pass the returned text to `window.paradoxConsole.showReply(text)`. If the request fails, use the same method to display an error message.
+The deployed Ask screen sends questions to `/api/tune`, which calls the OpenAI Responses API from a Vercel Function. Set `GPT_MODEL` to `gpt-5.6-luna` and `API_SECRET` to the OpenAI API key in the Vercel project's Environment Variables for the deployment you're testing. Opening `dist/index.html` from disk still uses sample replies.
+
+A custom integration can listen for `paradox:question` on `window` and call `event.preventDefault()` synchronously to take over. Read `event.detail.question` and call `window.paradoxConsole.showReply(text)` with an answer or an error message to settle Ping's visor state.
 
 Call `window.paradoxConsole.showView(view)` to switch the touchscreen to one of these views. The method returns `false` for an unknown view.
 
