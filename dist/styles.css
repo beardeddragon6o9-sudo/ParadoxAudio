@@ -48,6 +48,11 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   inset: 0;
   pointer-events: none;
 }
+.dashboard > ping-hologram {
+  --ping-anchor-x: 50.4%;
+  --ping-anchor-y: 55.36%;
+  --ping-width: 10.6%;
+}
 .touchscreen {
   position: absolute;
   left: 39.41%;
@@ -298,12 +303,18 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   .intro-actions button:last-child:hover { background: #ffffff13; }
 
   .dashboard {
+    --dashboard-hood-height: clamp(116px, 36cqw, 160px);
     position: relative;
     inset: auto;
     max-width: 630px;
     margin: 0 auto;
     container-type: inline-size;
     background: linear-gradient(90deg, #1b1511, #100d0b 13%, #100d0b 87%, #211912);
+  }
+  .dashboard > ping-hologram {
+    --ping-anchor-x: 48%;
+    --ping-anchor-y: var(--dashboard-hood-height);
+    --ping-width: clamp(144px, 50cqw, 216px);
   }
   /* Join the photo above and below the bezel around a taller touch display. */
   .dashboard::before, .dashboard::after {
@@ -313,9 +324,13 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
     background-size: 100% 100%, 310% auto;
   }
   .dashboard::before {
-    height: 22cqw;
-    background-image: linear-gradient(#0b0908, transparent 55%), url("cockpit.png");
-    background-position: center, 52% -74.9cqw;
+    height: var(--dashboard-hood-height);
+    /* The expanded photo crop includes the desktop buttons painted into the image. */
+    --button-mask-end: max(0px, calc(var(--dashboard-hood-height) - 23cqw));
+    background-image:
+      linear-gradient(#0b0908 var(--button-mask-end), transparent calc(var(--button-mask-end) + 25px)),
+      url("cockpit.png");
+    background-position: center, 52% calc(var(--dashboard-hood-height) - 96.9cqw);
   }
   .dashboard::after {
     height: 25cqw;

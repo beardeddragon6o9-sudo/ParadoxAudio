@@ -6,6 +6,8 @@ const chatHistory = touchscreen.querySelector(".chat-history");
 const messages = touchscreen.querySelector(".messages");
 const composer = touchscreen.querySelector(".composer");
 const questionInput = composer.elements.question;
+const ping = document.querySelector("ping-hologram");
+let pendingReplies = 0;
 
 const sampleReplies = new Map([
   [
@@ -59,6 +61,8 @@ function showReply(reply) {
   if (typeof reply !== "string" || !reply.trim()) return false;
 
   appendMessage("assistant", reply.trim());
+  pendingReplies = Math.max(0, pendingReplies - 1);
+  ping?.setState?.("responding");
   return true;
 }
 
@@ -67,6 +71,8 @@ function submitQuestion(value) {
   if (!question) return;
 
   appendMessage("visitor", question);
+  pendingReplies += 1;
+  ping?.setState?.("thinking");
   const useSampleReply = window.dispatchEvent(new CustomEvent("paradox:question", {
     cancelable: true,
     detail: { question },
@@ -77,6 +83,10 @@ function submitQuestion(value) {
       "I can answer the sample questions in this demo. Scroll up to try one.");
   }
 }
+
+ping?.addEventListener("pingstatechange", ({ detail }) => {
+  if (detail.state === "idle" && pendingReplies > 0) ping.setState("thinking");
+});
 
 document.querySelectorAll("[data-open]").forEach((button) => {
   button.addEventListener("click", () => showView(button.dataset.open));
