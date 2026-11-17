@@ -17,5 +17,12 @@ Call `window.paradoxConsole.showView(view)` to switch the touchscreen to one of 
 - `services`
 - `prerequisites`
 - `questions`
+- `contact`
 
 The legacy `process` view opens Services.
+
+## Email inquiries
+
+The Contact form posts to `/api/contact` in the existing Vercel project. The function sends through Gmail to `ParadoxDSPtuning@gmail.com` and sets Reply-To to the visitor's email.
+
+Enable 2-Step Verification on the work Gmail account and [create a Google app password](https://support.google.com/accounts/answer/185833). Add it as `GMAIL_APP_PASSWORD` to the Vercel environment you're testing, then deploy. Keep that value in Vercel's server-side environment settings.

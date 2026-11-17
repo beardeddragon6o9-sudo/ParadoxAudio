@@ -36,6 +36,7 @@
               <button type="button" role="tab" id="tab-questions" aria-controls="questions" aria-selected="true">Ask</button>
               <button type="button" role="tab" id="tab-services" aria-controls="services" aria-selected="false" tabindex="-1">Services</button>
               <button type="button" role="tab" id="tab-prerequisites" aria-controls="prerequisites" aria-selected="false" tabindex="-1">Prerequisites</button>
+              <button type="button" role="tab" id="tab-contact" aria-controls="contact" aria-selected="false" tabindex="-1">Contact</button>
             </div>
             <div class="screen-controls">
               <span class="demo-label">Demo</span>
@@ -52,6 +53,7 @@
                 <button type="button" data-question="What is REW?">REW</button>
                 <button type="button" data-question="What is time alignment?">Time alignment</button>
                 <button type="button" data-question="What should I bring?">What to bring</button>
+                <button type="button" data-open="contact">Send an inquiry</button>
               </div>
               <div class="messages" role="log" aria-label="Tuning conversation"></div>
             </div>
@@ -109,6 +111,26 @@
               </details>
             </div>
             <button class="text-action" type="button" data-open="questions">Ask a tuning question <span aria-hidden="true">→</span></button>
+          </section>
+          <section class="screen-panel information contact-panel" role="tabpanel" id="contact" aria-labelledby="tab-contact" tabindex="0" hidden>
+            <p class="contact-email">Work email <a href="mailto:ParadoxDSPtuning@gmail.com">ParadoxDSPtuning@gmail.com</a></p>
+            <p class="message assistant contact-greeting">I can take down your details and send them to our tuner. What would you like done, and what audio gear are you running?</p>
+            <form class="contact-form">
+              <label>Name <input name="name" autocomplete="name" maxlength="100" required></label>
+              <label>Email <input type="email" name="email" autocomplete="email" maxlength="254" required></label>
+              <label>Vehicle <small>(optional)</small>
+                <input name="vehicle" placeholder="Year, make and model" maxlength="120">
+              </label>
+              <label>Audio equipment
+                <textarea name="equipment" rows="2" placeholder="DSP, amps, speakers and subwoofer" maxlength="1200" required></textarea>
+              </label>
+              <label>What would you like done?
+                <textarea name="goals" rows="2" placeholder="Tell us what you’d like to improve" maxlength="1200" required></textarea>
+              </label>
+              <div hidden><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+              <button type="submit">Send inquiry</button>
+              <p class="contact-status" role="status" tabindex="-1"></p>
+            </form>
           </section>
         </div>
         <div class="screen-boot" aria-hidden="true">

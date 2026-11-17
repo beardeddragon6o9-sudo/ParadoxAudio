@@ -9,9 +9,9 @@
 
 * { box-sizing: border-box; }
 body { margin: 0; }
-button, input { font: inherit; }
+button, input, textarea { font: inherit; }
 button { cursor: pointer; }
-button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   outline: 2px solid #ffd4ac;
   outline-offset: 2px;
 }
@@ -269,14 +269,35 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   color: #f4eadd;
 }
 .composer input::placeholder { color: #ceb8a1; }
-.composer button {
+.composer button, .contact-form button {
   border: 1px solid #efba88;
   background: var(--copper);
   color: #211309;
   font-weight: 650;
 }
-.composer button { border-radius: .4em; padding: .21em .58em; }
-.composer button:hover { background: #ffd1a6; }
+.composer button, .contact-form button { border-radius: .4em; padding: .21em .58em; }
+.composer button:hover, .contact-form button:hover { background: #ffd1a6; }
+.contact-email { margin: 0 0 .55em; color: var(--muted); }
+.contact-email a { color: var(--copper); overflow-wrap: anywhere; }
+.contact-greeting { margin-bottom: .65em; }
+.contact-form { display: grid; gap: .55em; }
+.contact-form label { color: #ffdec1; }
+.contact-form small { color: var(--muted); }
+.contact-form :is(input, textarea) {
+  display: block;
+  width: 100%;
+  margin-top: .2em;
+  padding: .33em .48em;
+  border: 1px solid #684c37;
+  border-radius: .4em;
+  background: #191411;
+  color: #f4eadd;
+}
+.contact-form textarea { resize: vertical; }
+.contact-form button { justify-self: start; }
+.contact-form button:disabled { opacity: .65; cursor: wait; }
+.contact-status { margin: 0; line-height: 1.4; color: #ffdec1; }
+.contact-status:empty { display: none; }
 .screen-disclosures details + details { border-top: 1px solid #3d2c22; }
 .screen-disclosures summary {
   display: grid;
@@ -477,6 +498,12 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   .message { padding: .4em .58em; }
   .composer { padding: .35em .4em; }
   .composer input { min-height: 37px; font-size: 16px; }
+  .contact-form :is(input, textarea) { font-size: 16px; }
+}
+@media (max-width: 1260px) {
+  .screen-bar { padding-inline: .35em; }
+  .screen-controls { gap: .25em; }
+  .screen-tabs button { padding-inline: .35em; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cockpit[data-startup="screen"] .screen-boot { display: none; }

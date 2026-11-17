@@ -164,6 +164,40 @@ document.querySelectorAll("[data-open]").forEach((button) => {
   button.addEventListener("click", () => showView(button.dataset.open));
 });
 
+const contactForm = touchscreen.querySelector(".contact-form");
+const contactStatus = contactForm.querySelector(".contact-status");
+const sendInquiryButton = contactForm.querySelector("button");
+
+contactForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (sendInquiryButton.disabled) return;
+
+  if (window.location.protocol === "file:") {
+    contactStatus.textContent = "Direct sending is available on the deployed site. You can also use the work email above.";
+    return;
+  }
+
+  const inquiry = Object.fromEntries(new FormData(contactForm));
+  sendInquiryButton.disabled = true;
+  contactStatus.textContent = "Sending your inquiry…";
+  try {
+    const result = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(inquiry),
+      signal: AbortSignal.timeout(22_000),
+    });
+    if (!result.ok || (await result.json())?.sent !== true) throw new Error("Inquiry was not sent");
+    contactForm.reset();
+    contactStatus.textContent = "Your inquiry was sent. Our tuner can reply to the email you provided.";
+    if (pendingReplies === 0) ping?.setState?.("responding");
+  } catch {
+    contactStatus.textContent = "I couldn’t send your inquiry. Your details are still here. Try again or use the work email above.";
+  } finally {
+    sendInquiryButton.disabled = false;
+  }
+});
+
 touchscreen.querySelectorAll(".screen-disclosures details").forEach(item => {
   const panel = item.closest(".information");
   item.addEventListener("toggle", () => {
