@@ -1,5 +1,7 @@
 const cockpit = document.querySelector(".cockpit");
 const dashboard = cockpit.querySelector(".dashboard");
+const openingPhoto = dashboard.querySelector(".mobile-opening-photo");
+const skipOpening = dashboard.querySelector(".skip-opening");
 const touchscreen = document.querySelector(".touchscreen");
 const screenInterface = touchscreen.querySelector(".screen-interface");
 const screenBoot = touchscreen.querySelector(".screen-boot");
@@ -26,16 +28,22 @@ function loadsWithin(ready, milliseconds) {
   ]);
 }
 
+function endMobileOpening() {
+  delete cockpit.dataset.mobileOpening;
+}
+
 async function startCockpit() {
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   if (!motion.matches) {
     screenInterface.inert = true;
     if (matchMedia("(max-width: 1080px)").matches) {
-      // Hold the wide shot until the camera move and boot animation can start together.
+      // Fit the live display inside the bezel in the wide photo.
+      dashboard.style.setProperty("--wide-screen-scale-y", dashboard.offsetWidth * .0824 / touchscreen.offsetHeight);
+      cockpit.dataset.mobileOpening = "wide";
       cockpit.dataset.startup = "opening";
       const photo = cockpit.querySelector(".scene-picture img");
       const canPan = await loadsWithin(photo.decode(), 1200);
-      cockpit.toggleAttribute("data-skip-opening", !canPan);
+      if (!canPan) endMobileOpening();
       cockpit.dataset.startup = "screen";
     }
     await finishAnimation(screenBoot, "screen-boot");
@@ -49,7 +57,6 @@ async function startCockpit() {
     }
   }
   delete cockpit.dataset.startup;
-  cockpit.removeAttribute("data-skip-opening");
 
   const greeting = document.createElement("p");
   greeting.className = "message assistant";
@@ -57,6 +64,12 @@ async function startCockpit() {
   welcome.append(greeting);
   if (!motion.matches && !messages.childElementCount && ping?.state === "idle") {
     ping.setState("responding");
+  }
+
+  if (cockpit.hasAttribute("data-mobile-opening")) {
+    cockpit.dataset.mobileOpening = "moving";
+    await finishAnimation(openingPhoto, "cockpit-approach");
+    endMobileOpening();
   }
 }
 
@@ -84,6 +97,7 @@ function showView(view) {
   const activeTab = tabs.find((tab) => tab.getAttribute("aria-controls") === view);
   if (!activeTab) return false;
 
+  endMobileOpening();
   const changed = activeTab.getAttribute("aria-selected") !== "true";
   for (const tab of tabs) {
     const selected = tab === activeTab;
@@ -284,6 +298,11 @@ touchscreen.addEventListener("keydown", (event) => {
 window.paradoxConsole = Object.freeze({
   showView,
   showReply: reply => showReply(reply),
+});
+
+skipOpening.addEventListener("click", () => {
+  const activeTab = tabs.find(tab => tab.getAttribute("aria-selected") === "true");
+  showView(activeTab.getAttribute("aria-controls"));
 });
 
 startCockpit();
